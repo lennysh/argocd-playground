@@ -64,6 +64,8 @@ Only if you enable GitHub/GitLab SCM integration on the `AutomationPortal` CR.
 
 For all CR fields see the [configuration reference](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/html/installing_self-service_automation_portal/install-automation_portal_operator_configuration_reference).
 
+**Do not set `spec.scm.credentials.secretRef`** when GitHub/GitLab integration is disabled. The operator validates `secrets-scm` for GitHub App keys if `secretRef` is set, even with `github.enabled: false`.
+
 ### OCI plugin init (~3 min per new pod)
 
 The operator downloads OCI plugins on pod start (~3 min). Avoid stacked rollouts while plugins initialize.

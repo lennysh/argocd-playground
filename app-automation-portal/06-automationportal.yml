@@ -11,16 +11,8 @@ spec:
     checkSSL: false
     credentials:
       secretRef: secrets-rhaap-portal
-  scm:
-    credentials:
-      secretRef: secrets-scm
-    github:
-      enabled: false
-      host: github.com
-      authType: app
-    gitlab:
-      enabled: false
-      host: gitlab.com
+  # Omit scm.credentials when GitHub/GitLab integration is disabled — the operator
+  # validates secrets-scm for GitHub App keys if secretRef is set.
   auth:
     providers:
       github:

@@ -64,7 +64,25 @@ Only if you enable GitHub/GitLab SCM integration on the `AutomationPortal` CR.
 
 For all CR fields see the [configuration reference](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/html/installing_self-service_automation_portal/install-automation_portal_operator_configuration_reference).
 
-**Do not set `spec.scm.credentials.secretRef`** when GitHub/GitLab integration is disabled. The operator validates `secrets-scm` for GitHub App keys if `secretRef` is set, even with `github.enabled: false`.
+**Do not set `spec.scm.credentials.secretRef`** when GitHub/GitLab integration is disabled. The operator validates `secrets-scm` for GitHub App keys if `secretRef` is set, even with `github.enabled: false`. Do not apply an empty `secrets-scm` secret — delete it if present:
+
+```bash
+oc delete secret secrets-scm -n self-service-portal
+```
+
+### Portal operator OOMKilled (`CrashLoopBackOff`)
+
+The operator CSV defaults to a 128Mi memory limit, which can OOM on busy clusters (especially while auto-installing the RHDH operator). Patch the deployment:
+
+```bash
+oc patch deployment portal-operator -n automation-portal-operator-system --type json \
+  -p '[
+    {"op":"replace","path":"/spec/template/spec/containers/0/resources/limits/memory","value":"512Mi"},
+    {"op":"replace","path":"/spec/template/spec/containers/0/resources/requests/memory","value":"256Mi"}
+  ]'
+```
+
+This patch is not managed by git (OLM owns the Deployment). Re-apply after operator upgrades if needed.
 
 ### OCI plugin init (~3 min per new pod)
 
@@ -96,7 +114,7 @@ oc get automationportal portal -n self-service-portal \
 
 There is no in-place Helm→operator migration. Cut over cleanly:
 
-1. **Prepare secrets** — reuse `secrets-rhaap-portal` and `secrets-scm`; copy `auth.json` from `redhat-rhaap-portal-dynamic-plugins-registry-auth` into new secret `portal-registry-auth`
+1. **Prepare secrets** — reuse `secrets-rhaap-portal`; copy `auth.json` from `redhat-rhaap-portal-dynamic-plugins-registry-auth` into new secret `portal-registry-auth`
 2. **Remove Helm Argo apps** — delete `self-service-portal` and `self-service-portal-prereqs` (removed from git; `cluster-config` prunes them)
 3. **Sync `automation-portal`** — approve InstallPlan, wait for operator CSV
 4. **Apply secrets** then let `AutomationPortal` CR reconcile

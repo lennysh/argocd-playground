@@ -1,9 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-namespace: self-service-portal
-
-resources:
-  - 01-namespace.yml
-  - 03-portal-backend-env.yml
-  # - 02-secrets.yml

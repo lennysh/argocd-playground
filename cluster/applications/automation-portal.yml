@@ -1,18 +1,20 @@
 ---
+# Deploys the Ansible automation portal operator (Technology Preview).
+# Requires secrets in self-service-portal namespace — see app-automation-portal/README.md
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: self-service-portal-prereqs
+  name: automation-portal
   namespace: openshift-gitops
   annotations:
-    argocd.argoproj.io/sync-wave: "25"
+    argocd.argoproj.io/sync-wave: "26"
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
   source:
     repoURL: https://github.com/lennysh/argocd-playground.git
-    path: app-self-service-portal
+    path: app-automation-portal
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
@@ -33,5 +35,9 @@ spec:
       backoff:
         duration: 5s
         factor: 2
-        maxDuration: 5m
-...
+        maxDuration: 10m
+  ignoreDifferences:
+    - group: automationportal.aap.redhat.com
+      kind: AutomationPortal
+      jsonPointers:
+        - /status

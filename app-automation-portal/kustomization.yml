@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - 01-operator-namespace.yml
+  - 02-operatorgroup.yml
+  - 03-subscription.yml
+  - 04-instance-namespace.yml
+  # - 05-secrets.yml
+  - 06-automationportal.yml

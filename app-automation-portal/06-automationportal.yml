@@ -1,0 +1,54 @@
+---
+apiVersion: automationportal.aap.redhat.com/v1alpha1
+kind: AutomationPortal
+metadata:
+  name: portal
+  namespace: self-service-portal
+  annotations:
+    argocd.argoproj.io/sync-wave: "6"
+spec:
+  aap:
+    checkSSL: false
+    credentials:
+      secretRef: secrets-rhaap-portal
+  scm:
+    credentials:
+      secretRef: secrets-scm
+    github:
+      enabled: false
+      host: github.com
+      authType: app
+    gitlab:
+      enabled: false
+      host: gitlab.com
+  auth:
+    providers:
+      github:
+        enabled: false
+      gitlab:
+        enabled: false
+  plugins:
+    registry: registry.redhat.io
+    catalog:
+      enabled: true
+      syncInterval: 60
+      jobTemplates:
+        enabled: true
+      collections:
+        enabled: false
+      gitContents:
+        enabled: false
+  permissions:
+    enabled: true
+    adminUsers:
+      - user:default/admin
+      - group:default/aap-admins
+    superUsers:
+      - user:default/admin
+  backstage:
+    replicas: 1
+    route:
+      enabled: true
+      host: redhat-rhaap-portal-self-service-portal.apps.ocp001.lennysh.net
+  database:
+    enableLocalDb: true

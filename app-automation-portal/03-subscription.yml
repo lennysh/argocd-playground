@@ -1,0 +1,15 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: automation-portal-operator
+  namespace: automation-portal-operator-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  channel: fast
+  installPlanApproval: Manual
+  name: automation-portal-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  # startingCSV: automation-portal-operator.v2.2.20260909

@@ -1,0 +1,12 @@
+---
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: automation-portal-operator-system-og
+  namespace: automation-portal-operator-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  targetNamespaces:
+    - self-service-portal
+  upgradeStrategy: Default

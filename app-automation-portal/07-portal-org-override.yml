@@ -17,4 +17,4 @@ data:
       providers:
         rhaap:
           production:
-            orgs: DemoLab
+            orgs: "Lenny's Ansible Playground"

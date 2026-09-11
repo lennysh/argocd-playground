@@ -1,0 +1,20 @@
+---
+# Overrides operator-generated app-config after portal-app-config is rendered.
+# Referenced from AutomationPortal spec.plugins.customAppConfigRef.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: portal-org-override
+  namespace: self-service-portal
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+    rhdh.redhat.com/backstage-name: portal-backstage
+  labels:
+    rhdh.redhat.com/ext-config-sync: "true"
+data:
+  app-config.override.yaml: |
+    catalog:
+      providers:
+        rhaap:
+          production:
+            orgs: DemoLab

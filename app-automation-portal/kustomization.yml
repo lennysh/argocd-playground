@@ -7,4 +7,5 @@ resources:
   - 03-subscription.yml
   - 04-instance-namespace.yml
   # - 05-secrets.yml
+  - 07-portal-org-override.yml
   - 06-automationportal.yml

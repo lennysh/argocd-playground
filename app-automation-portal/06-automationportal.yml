@@ -21,6 +21,7 @@ spec:
         enabled: false
   plugins:
     registry: registry.redhat.io
+    customAppConfigRef: portal-org-override
     catalog:
       enabled: true
       syncInterval: 60

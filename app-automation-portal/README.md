@@ -61,6 +61,22 @@ Only if you enable GitHub/GitLab SCM integration on the `AutomationPortal` CR.
 2. `spec.aap.checkSSL: false` — lab/playground only; AAP uses the default OpenShift router cert
 3. `spec.permissions` — RBAC admin/super users (mirrors former Helm `values.yaml`)
 4. `spec.database.enableLocalDb: true` — operator-managed PostgreSQL (no manual postgres secret)
+5. `spec.plugins.customAppConfigRef` + `07-portal-org-override.yml` — AAP org to sync (default operator value is `Default`)
+
+### AAP organization sync
+
+The operator CR has no `orgs` field. Override the generated Backstage app-config instead:
+
+| File | Purpose |
+|------|---------|
+| `07-portal-org-override.yml` | ConfigMap with `app-config.override.yaml` |
+| `06-automationportal.yml` | `spec.plugins.customAppConfigRef: portal-org-override` |
+
+Edit `catalog.providers.rhaap.production.orgs` in `07-portal-org-override.yml` to match your AAP organization name (must match exactly). The portal syncs job templates from that org only.
+
+The ConfigMap also carries `rhdh.redhat.com/ext-config-sync` labels so the RHDH operator mounts `app-config.override.yaml` as an additional `--config` file (last wins for overlapping keys).
+
+Do not add a duplicate `catalog.providers.rhaap` block elsewhere — the override merges after operator defaults (same pattern as Helm `values.yaml` comments about RHIDP-6082).
 
 For all CR fields see the [configuration reference](https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.7/html/installing_self-service_automation_portal/install-automation_portal_operator_configuration_reference).
 

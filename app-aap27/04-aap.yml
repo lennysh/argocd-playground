@@ -12,7 +12,7 @@ metadata:
     app.kubernetes.io/operator-version: ''
     app.kubernetes.io/part-of: aap
 spec:
-  idle_aap: true
+  idle_aap: false
   database:
     database_secret: external-postgres-configuration-gateway
     idle_disabled: true

@@ -29,7 +29,7 @@ spec:
       - setting: AWX_RUNNER_KEEPALIVE_SECONDS
         value: 240
   eda:
-    disabled: true
+    disabled: false
     name: eda
     database:
       database_secret: external-postgres-configuration-eda
